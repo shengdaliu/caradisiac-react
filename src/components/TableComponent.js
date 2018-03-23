@@ -37,8 +37,15 @@ class TableComponent extends React.Component {
         let page = this.state.page + 1;
         this.setState({page});
 
-        let api_url = 'http://localhost:9292/caradisiac/suv/page/' + this.state.page;
+        let data = this.props.data;
 
+        let api_url = 'http://localhost:9292/caradisiac/suv/searchByVolume/' + data.minVolume + '/' + data.maxVolume + '/' + this.state.page;
+
+        if(data.brand !== '' && data.brand !== undefined)
+        {
+          api_url = 'http://localhost:9292/caradisiac/suv/searchByBrand/' + data.brand + '/' + data.minVolume + '/' + data.maxVolume + '/' + this.state.page;
+        }
+        
         axios.get(api_url)
           .then(res => {
             const suv = res.data;
@@ -63,10 +70,17 @@ class TableComponent extends React.Component {
     }
   }
 
-  updateDataTable(){
-    // let api_url = 'http://localhost:9292/caradisiac/suv/' + this.state.quantity;
-    let api_url = 'http://localhost:9292/caradisiac/suv/page/' + this.state.page;
+  updateDataTable(data){
+    this.state.page = 0;
+    this.state.suv = [];
 
+    let api_url = 'http://localhost:9292/caradisiac/suv/searchByVolume/' + data.minVolume + '/' + data.maxVolume + '/' + this.state.page;
+
+    if(data.brand !== '' && data.brand !== undefined)
+    {
+      api_url = 'http://localhost:9292/caradisiac/suv/searchByBrand/' + data.brand + '/' + data.minVolume + '/' + data.maxVolume + '/' + this.state.page;
+    }
+    
     axios.get(api_url)
       .then(res => {
         const suv = res.data;
